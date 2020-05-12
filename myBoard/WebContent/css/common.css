@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;	
+}
+
+a {
+	text-decoration: none;
+}
+
+.flexContainer {
+	display: flex;
+	height: 100%;	
+}
+
+.flexCenter {
+	justify-content: center;
+	align-items: center;
+}
+
+.marBottom10 {
+	margin-bottom: 10px;
+}
+
+.solidForm {
+	padding: 15px;
+	border: 1px solid #7f8c8d;
+}
+
+#msg {
+	color: red;
+}
+
+
+
