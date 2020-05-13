@@ -41,4 +41,4 @@
 
 ## 기획
 ### 디자인스케치
-![title](img/01_Title.jpg = 200x200)
+![title](img/01_Title.jpg)
