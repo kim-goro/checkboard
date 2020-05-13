@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
-  <display-name>myBoard</display-name>
-  
-  <!-- 한글설정 필터추가 -->
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+	id="WebApp_ID" version="4.0">
+	<display-name>myBoard</display-name>
+
+	<!-- 한글설정 필터추가 -->
 	<filter>
 		<filter-name>SetCharacterEncoding</filter-name>
 		<filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
@@ -14,7 +17,45 @@
 	<filter-mapping>
 		<filter-name>SetCharacterEncoding</filter-name>
 		<url-pattern>/*</url-pattern>
-	</filter-mapping> 
-	<!-- 한글설정 END -->
-	
+	</filter-mapping>
+
+	<!-- 코드 조각 자동 포함 기능 -->
+	<jsp-config>
+		<jsp-property-group>
+			<url-pattern>*.jsp</url-pattern>
+			<include-prelude>/WEB-INF/jsp/top.jspf</include-prelude>
+		</jsp-property-group>
+	</jsp-config>
+
+
+	<!-- 데이터베이스 설정 -->
+	<listener>
+		<listener-class>jdbc.DBCPInitListener</listener-class>
+	</listener>
+
+	<context-param>
+		<param-name>poolConfig</param-name>
+		<param-value>
+			jdbcdriver=com.mysql.cj.jdbc.Driver
+			jdbcUrl=jdbc:mysql://localhost:3307/checkboard?characterEncoding=utf8
+			dbUser=root
+			dbPass=1234
+			validationQuery=select 1
+			minIdle=3
+			maxTotal=30
+			poolName=checkboard
+		</param-value>
+	</context-param>
+
+	<!-- 로그인 필터 -->
+	<filter>
+		<filter-name>LoginCheckFilter</filter-name>
+		<filter-class>filter.LoginCheckFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>LoginCheckFilter</filter-name>
+		<url-pattern>/changePwd.do</url-pattern>
+		<url-pattern>/article/write.do</url-pattern>
+		<url-pattern>/article/modify.do</url-pattern>
+	</filter-mapping>
 </web-app>

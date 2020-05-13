@@ -1,163 +1,144 @@
 package user.db;
 
+import java.net.http.HttpRequest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import jdbc.JdbcUtil;
 import user.vo.UserImgVO;
 import user.vo.UserVO;
 
 public class UserDAO {
-	
-	//--------------------------------------------------------- CRUD ---------------------------------------------------------//
-	
+
+	// --------------------------------------------------------- CRUD
+	// ---------------------------------------------------------//
+
 	// 유저 생성하기 joinUser()
-	// 유저 이미지 등록하기 regUserImg()
-	// 유저 조회(검색)하기
-	// 유저 이미지 조회하기 getProfileImg()
-	
-		
-	// CREATE 유저 생성
-	// return 0:에러 발생, 1:등록이 잘 됐음
-	public static int joinUser(UserVO param) {
-		int result = 0;
-		Connection con = null;
-		PreparedStatement ps = null;
-		String sql = " insert into t_user " + " (u_id, u_pw, u_nickname, email, ph, addr, sex, birth) " + " values "
-				+ " (?, ?, ?, ?, ?, ?, ?, ?) ";
+	// 유저 조회(검색)하기 getById()
+
+	// 유저 생성하기
+	public static int joinUser(Connection conn, UserVO param) throws SQLException {
+		int cmd = 0;
+		System.out.println(param.getUser_id() + "님이 가입을 시도하였습니다.");
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		String sql = " INSERT INTO t_user "
+				+ " (user_id, user_password, user_email, user_gender, user_hobby, user_birth) "
+				+ " VALUES(?, ?, ?, ?, ?, ?, ?) ";
 
 		try {
-			con = DbBridge.getCon();
-			ps = con.prepareStatement(sql);
-			ps.setString(1, param.getU_id());
-			ps.setString(2, param.getU_pw());
-			ps.setString(3, param.getU_nickname());
-			ps.setString(4, param.getEmail());
-			ps.setString(5, param.getPh());
-			ps.setString(6, param.getAddr());
-			ps.setInt(7, param.getSex());
-			ps.setString(8, param.getBirth());
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, param.getUser_id());
+			pstmt.setString(2, param.getUser_password());
+			pstmt.setString(4, param.getUser_email());
+			pstmt.setString(3, param.getUser_gender());
+			pstmt.setString(5, param.getUser_hobby());
+			pstmt.setString(6, param.getUser_birth());
+			pstmt.executeUpdate();
+			System.out.println(param.getUser_id() + "님의 가입을 완료하였습니다.");
+			cmd = 1;
 
-			result = ps.executeUpdate();
+		} catch (Exception e) {
+			System.out.println(param.getUser_id() + "님의 가입이 실패하였습니다.");
+			cmd = 2;
+			e.printStackTrace();
+		} finally {
+			JdbcUtil.close(rs);
+			JdbcUtil.close(pstmt);
+		}
+
+		return cmd;
+	}
+
+	// 유저 조회(검색)하기
+	public static List<UserVO> getById(Connection conn, UserVO param) {
+		int cmd = 0;
+		List<UserVO> list = new ArrayList();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		String sql = "SELECT * FROM t_user " + " WHERE user_id = ? OR user_email = ?";
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, param.getUser_id());
+			pstmt.setString(1, param.getUser_email());
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				UserVO vo = new UserVO();
+				vo.setI_user(rs.getInt("i_user"));
+				vo.setUser_id(rs.getString("user_id"));
+				vo.setUser_email(rs.getString("user_email"));
+				vo.setUser_gender(rs.getString("user_gender"));
+				vo.setUser_hobby(rs.getString("user_hobby"));
+				vo.setUser_birth(rs.getString("user_birth"));
+				vo.setUser_birth(rs.getString("user_birth"));
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DbBridge.close(con, ps);
+			JdbcUtil.close(pstmt);
 		}
+		return list;
+	}
 
-		return result;
-	}
-	
-	// CREATE 유저 이미지 등록
-	public static int regUserImg(UserImgVO param) {
-		int result = 0;
-		
-		Connection con = null;
-		PreparedStatement ps = null;
-		String sql = " INSERT INTO t_user_img " + 
-				" (i_user, seq, img) " + 
-				" VALUES " + 
-				" (?, 1, ?) ";		
-		try {
-			con = DbBridge.getCon();
-			ps = con.prepareStatement(sql);
-			ps.setInt(1, param.getI_user());
-			ps.setString(2, param.getImg());			
-			
-			result = ps.executeUpdate();
-			
-		} catch (Exception e) {			
-			e.printStackTrace();
-		} finally {
-			DbBridge.close(con, ps);
-		}
-		
-		return result;
-	}
-	
-	// SELECT 유저의 최근 이미지 조회
-	public static String getProfileImg(int i_user) {
-		String img = null;
-		Connection con = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		
-		String sql = " SELECT img FROM t_user_img "
-				+ " WHERE i_user = ? "
-				+ " AND seq = 1 ";
-		
-		try {
-			con = DbBridge.getCon();
-			ps = con.prepareStatement(sql);
-			ps.setInt(1, i_user);			
-			
-			rs = ps.executeQuery();
-			while(rs.next()) {
-				img = rs.getString("img");
-			}
-			
-		} catch (Exception e) {			
-			e.printStackTrace();
-		} finally {
-			DbBridge.close(con, ps, rs);
-		}
-		
-		
-		return img;
-	}
-	
-	//--------------------------------------------------------- CRUD ---------------------------------------------------------//
-	
+	// --------------------------------------------------------- CRUD
+	// ---------------------------------------------------------//
+
 	// 로그인 하기 doLogin()
-	// 로그아웃 하기
+	// 로그아웃 하기 doLogout()
 	// 유령회원 설정하기
-	
-	
-	// 0:알수없는 에러발생, 1:로긴 성공, 2:아이디 없음, 3:비밀번호 틀림
-	public static int doLogin(UserVO param) {
-		int result = 0;
-		Connection con = null;
-		PreparedStatement ps = null;
+
+	// 로그인하기
+	public static int doLogin(Connection conn, UserVO param) {
+		int cmd = 0;
+		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
-		String sql = " SELECT * FROM t_user WHERE u_id = ? ";
+		String sql = " SELECT * FROM t_user " + "WHERE u_id = ? ";
 
 		try {
-			con = DbBridge.getCon();
-			ps = con.prepareStatement(sql);
-			ps.setString(1, param.getU_id());
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, param.getUser_id());
 
-			rs = ps.executeQuery();
+			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				String u_pw = rs.getString("u_pw");
-				if (u_pw.equals(param.getU_pw())) { // 로그인 성공
-					result = 1;
-
-					String nickNm = rs.getString("u_nickname");
-					int i_user = rs.getInt("i_user");
-
-					param.setU_pw(null);
-					param.setU_nickname(nickNm);
-					param.setI_user(i_user);
-
+				if (u_pw.equals(param.getUser_password())) {
+					cmd = 1; // 로그인 성공
+					param.setUser_password(null);
+					param.setUser_id(rs.getString("user_id"));
+					param.setI_user(rs.getInt("i_user"));
 				} else {
-					result = 3;
+					cmd = 3; // 비밀번호 틀림
 				}
 			} else {
-				result = 2;
+				cmd = 2; // 아이디 없음
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DbBridge.close(con, ps, rs);
+			JdbcUtil.close(pstmt);
+			JdbcUtil.close(rs);
 		}
-		return result;
+		return cmd;
 	}
-	
+
+	// 로그아웃 하기
+	public static void doLogout(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		session.invalidate(); // 세션 종료
+	}
+
 }
-
-
