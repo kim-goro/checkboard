@@ -41,4 +41,9 @@
 
 ## 기획
 ### 디자인스케치
-![title](img/01_Title.jpg | width=100)
+![](img/01_Title.jpg)
+![](img/02_login.jpg)
+![](img/03_main-dashboard.jpg)
+![](img/04_main-calender.jpg)
+![](img/05_main-calender.jpg)
+![](img/06_post-1.jpg)
