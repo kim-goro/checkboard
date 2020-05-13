@@ -1,4 +1,4 @@
-package kr.koreait.myboard.vo;
+package user.vo;
 
 public class UserImgVO {
 	private int i_user;

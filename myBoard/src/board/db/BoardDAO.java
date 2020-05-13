@@ -1,4 +1,4 @@
-package kr.koreait.myboard.db;
+package board.db;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,11 +6,13 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import kr.koreait.myboard.vo.BoardVO;
+import board.vo.BoardVO;
 
 public class BoardDAO {
 	
-	//------------------------------------------------- Create (insert)
+	//--------------------------------------------------------- CRUD ---------------------------------------------------------//
+	
+	// CREATE 게시글 등록
 	public static int insertBoard(BoardVO param) {
 		int result = 0;
 		
@@ -40,7 +42,7 @@ public class BoardDAO {
 	}
 	
 	
-	//------------------------------------------------- Read (select)
+	// SELECT 해당 게시글 조회하기
 	public static BoardVO getBoard(BoardVO param) {
 		BoardVO vo = null;
 		
@@ -91,6 +93,7 @@ public class BoardDAO {
 		return vo;
 	}
 	
+	// SELECT 모든 게시글 갯수 조회하기
 	public static int getTotalPageCnt(BoardVO param) {
 		int totalPageCnt = 0;
 		Connection con = null;
@@ -122,6 +125,7 @@ public class BoardDAO {
 		return totalPageCnt;
 	}
 	
+	// SELECT 모든 게시글 리스트 조회하기
 	public static List<BoardVO> getBoardList(BoardVO param) {
 		List<BoardVO> list = new ArrayList();
 		
@@ -182,8 +186,7 @@ public class BoardDAO {
 	
 	
 	
-	//------------------------------------------------- Update (update)
-	//조회수 수정
+	// UPDATE 조회수 변경(증가) 하기
 	public static int updateBoardHits(BoardVO param) {
 		int result = 0;
 		Connection con = null;
@@ -210,8 +213,7 @@ public class BoardDAO {
 	}
 	
 	
-	//------------------------------------------------- Delete (delete)
-	
+	// DELETE 게시글 삭제하기 
 	public static int delBoard(BoardVO param) {
 		int result = 0;
 		Connection con = null;
@@ -237,6 +239,13 @@ public class BoardDAO {
 		
 		return result;
 	}
+	//--------------------------------------------------------- CRUD ---------------------------------------------------------//
+	
+	// 댓글 달기
+	// 댓글 삭제하기
+	// 댓글 수정하기
+	
+	// 답글 달기
 }
 
 

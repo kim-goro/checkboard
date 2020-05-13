@@ -1,4 +1,4 @@
-package kr.koreait.myboard.db;
+package user.db;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,13 +6,20 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import kr.koreait.myboard.vo.UserImgVO;
-import kr.koreait.myboard.vo.UserVO;
+import user.vo.UserImgVO;
+import user.vo.UserVO;
 
 public class UserDAO {
 	
-	//--------------------------------------------------------- Create (Insert) -------------------//
-
+	//--------------------------------------------------------- CRUD ---------------------------------------------------------//
+	
+	// 유저 생성하기 joinUser()
+	// 유저 이미지 등록하기 regUserImg()
+	// 유저 조회(검색)하기
+	// 유저 이미지 조회하기 getProfileImg()
+	
+		
+	// CREATE 유저 생성
 	// return 0:에러 발생, 1:등록이 잘 됐음
 	public static int joinUser(UserVO param) {
 		int result = 0;
@@ -44,6 +51,7 @@ public class UserDAO {
 		return result;
 	}
 	
+	// CREATE 유저 이미지 등록
 	public static int regUserImg(UserImgVO param) {
 		int result = 0;
 		
@@ -70,47 +78,7 @@ public class UserDAO {
 		return result;
 	}
 	
-	
-	
-	//--------------------------------------------------------- Read (Select) -------------------//
-	public static List<UserImgVO> getProfileImgList(int i_user) {
-		List<UserImgVO> list = new ArrayList();
-		
-		Connection con = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		
-		String sql = " SELECT seq, img "
-				+ " FROM t_user_img "
-				+ " WHERE i_user = ? "
-				+ " ORDER BY seq DESC ";
-		
-		try {
-			con = DbBridge.getCon();
-			ps = con.prepareStatement(sql);
-			ps.setInt(1, i_user);			
-			rs = ps.executeQuery();
-			
-			while(rs.next()) {
-				int seq = rs.getInt("seq");
-				String img = rs.getString("img");
-				
-				UserImgVO vo = new UserImgVO();
-				vo.setSeq(seq);
-				vo.setImg(img);
-				
-				list.add(vo);				
-			}
-			
-		} catch (Exception e) {			
-			e.printStackTrace();
-		} finally {
-			DbBridge.close(con, ps, rs);
-		}
-		
-		return list;
-	}
-	
+	// SELECT 유저의 최근 이미지 조회
 	public static String getProfileImg(int i_user) {
 		String img = null;
 		Connection con = null;
@@ -141,11 +109,14 @@ public class UserDAO {
 		return img;
 	}
 	
-
-	// 0:알수없는 에러발생
-	// 1:로긴 성공
-	// 2:아이디 없음
-	// 3:비밀번호 틀림
+	//--------------------------------------------------------- CRUD ---------------------------------------------------------//
+	
+	// 로그인 하기 doLogin()
+	// 로그아웃 하기
+	// 유령회원 설정하기
+	
+	
+	// 0:알수없는 에러발생, 1:로긴 성공, 2:아이디 없음, 3:비밀번호 틀림
 	public static int doLogin(UserVO param) {
 		int result = 0;
 		Connection con = null;
@@ -184,40 +155,9 @@ public class UserDAO {
 		} finally {
 			DbBridge.close(con, ps, rs);
 		}
-
 		return result;
 	}
 	
-	//--------------------------------------------------------- Update (Update) -------------------//
-	public static void updUserImgAddSeq(UserImgVO param) {		
-		Connection con = null;
-		PreparedStatement ps = null;		
-
-		String sql = " UPDATE t_user_img"
-				+ " SET seq = seq + 1 "
-				+ " WHERE i_user = ? "
-				+ " ORDER BY seq DESC ";
-
-		try {
-			con = DbBridge.getCon();
-			ps = con.prepareStatement(sql);
-			ps.setInt(1, param.getI_user());
-			ps.executeUpdate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			DbBridge.close(con, ps);
-		}
-	}
-	
-	
-	//--------------------------------------------------------- Delete (Delete) -------------------//
-
 }
-
-
-
-
-
 
 

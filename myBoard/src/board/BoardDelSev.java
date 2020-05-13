@@ -1,8 +1,7 @@
-package kr.koreait.myboard;
+package board;
 
 import java.io.IOException;
 
-import javax.jws.soap.SOAPBinding.Use;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,8 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import kr.koreait.myboard.db.BoardDAO;
+import board.db.BoardDAO;
+import board.vo.BoardVO;
 import kr.koreait.myboard.vo.*;
+import user.vo.UserVO;
 
 @WebServlet("/boardDel")
 public class BoardDelSev extends HttpServlet {

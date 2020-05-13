@@ -1,4 +1,4 @@
-package kr.koreait.myboard;
+package board;
 
 import java.io.IOException;
 
@@ -10,52 +10,49 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import kr.koreait.myboard.db.UserDAO;
-import kr.koreait.myboard.vo.UserImgVO;
-import kr.koreait.myboard.vo.UserVO;
+import board.db.BoardDAO;
+import board.vo.BoardVO;
+import user.vo.UserVO;
 
-@WebServlet("/profileDetail")
-public class ProfileDetailSev extends HttpServlet {
+@WebServlet("/boardRegmod")
+public class BoardRegModSev extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+   
+	//화면 띄우는 용도
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//로그인 체크
+		//세션에 값세팅
 		HttpSession hs = request.getSession();
 		UserVO loginUser = (UserVO)hs.getAttribute("loginUser");
 		if(loginUser == null) {
 			response.sendRedirect("/login");
 			return;
 		}
-		
-		String img = UserDAO.getProfileImg(loginUser.getI_user());
-		request.setAttribute("img", img);
-		
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/profileDetail.jsp");
+				
+		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/boardRegMod.jsp");
 		rd.forward(request, response);
 	}
 
-	//프로필 이미지 업로드
+	//작업 용도(insert, update)
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
-		UserVO loginUser = (UserVO)hs.getAttribute("loginUser");
-				
-		String filePath = String.valueOf(loginUser.getI_user());		
-		String fileNm = Utils.uploadFile(request, filePath);
+		UserVO loginUser = (UserVO)hs.getAttribute("loginUser");		
+		int i_user = loginUser.getI_user();
 		
-		UserImgVO param = new UserImgVO();
-		param.setI_user(loginUser.getI_user());
-		param.setImg(fileNm);
+		String title = request.getParameter("title");
+		String content = request.getParameter("content");
 		
-		UserDAO.updUserImgAddSeq(param);		
-		int result = UserDAO.regUserImg(param);
-		doGet(request, response);
+		System.out.println("i_user : " + i_user);
+		System.out.println("title : " + title);
+		System.out.println("content : " + content);
 		
+		BoardVO bVO = new BoardVO();
+		bVO.setTitle(title);
+		bVO.setContent(content);
+		bVO.setI_user(i_user);
+		
+		BoardDAO.insertBoard(bVO);
+		
+		response.sendRedirect("/boardList");
 	}
 
 }
-
-
-
-
-
-

@@ -1,4 +1,4 @@
-package kr.koreait.myboard;
+package board;
 
 import java.io.IOException;
 
@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import kr.koreait.myboard.db.BoardCommentDAO;
-import kr.koreait.myboard.db.BoardDAO;
-import kr.koreait.myboard.vo.BoardVO;
+import board.db.BoardCommentDAO;
+import board.db.BoardDAO;
+import board.vo.BoardVO;
 
 @WebServlet("/boardDetail")
 public class BoardDetailSev extends HttpServlet {

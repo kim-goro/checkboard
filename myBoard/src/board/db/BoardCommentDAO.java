@@ -1,4 +1,4 @@
-package kr.koreait.myboard.db;
+package board.db;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,8 +6,9 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import kr.koreait.myboard.vo.BoardCommentVO;
-import kr.koreait.myboard.vo.BoardVO;
+import board.vo.BoardCommentVO;
+import board.vo.BoardVO;
+import common.DbBridge;
 
 public class BoardCommentDAO {
 	public static int insertComment(BoardCommentVO param) {

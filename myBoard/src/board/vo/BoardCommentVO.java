@@ -1,4 +1,4 @@
-package kr.koreait.myboard.vo;
+package board.vo;
 
 public class BoardCommentVO {
 	private int i_comment;

@@ -1,4 +1,4 @@
-package kr.koreait.myboard.db;
+package common;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

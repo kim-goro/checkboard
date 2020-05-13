@@ -1,4 +1,4 @@
-package kr.koreait.myboard;
+package user;
 
 import java.io.IOException;
 
@@ -6,8 +6,8 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-import kr.koreait.myboard.db.UserDAO;
-import kr.koreait.myboard.vo.UserVO;
+import user.db.UserDAO;
+import user.vo.UserVO;
 
 
 @WebServlet("/login")
