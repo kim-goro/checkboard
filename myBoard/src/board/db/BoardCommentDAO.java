@@ -11,6 +11,14 @@ import board.vo.BoardVO;
 import common.DbBridge;
 
 public class BoardCommentDAO {
+
+	//--------------------------------------------------------- CRUD ---------------------------------------------------------//
+	
+	// 댓글 달기 insertComment()
+	// 댓글 삭제하기 deleteComment()
+	// 댓글 수정하기
+	// 댓글 조회하기 getBoardCommenList()
+	
 	public static int insertComment(BoardCommentVO param) {
 		int result = 0;
 		Connection con = null;
@@ -117,6 +125,8 @@ public class BoardCommentDAO {
 		
 		return list;
 	}
+
+	//--------------------------------------------------------- CRUD ---------------------------------------------------------//
 	
 }
 

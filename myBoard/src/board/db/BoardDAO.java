@@ -12,6 +12,12 @@ public class BoardDAO {
 	
 	//--------------------------------------------------------- CRUD ---------------------------------------------------------//
 	
+	// 게시글 등록 insertBoard()
+	// 게시글 수정
+	// 게시글 삭제 delBoard()
+	// 해당 게시물 가져오기 getBoard()
+	// 모든 게시물리스트 가져오기 getBoardList()
+	
 	// CREATE 게시글 등록
 	public static int insertBoard(BoardVO param) {
 		int result = 0;
@@ -93,37 +99,7 @@ public class BoardDAO {
 		return vo;
 	}
 	
-	// SELECT 모든 게시글 갯수 조회하기
-	public static int getTotalPageCnt(BoardVO param) {
-		int totalPageCnt = 0;
-		Connection con = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		String sql = " SELECT CEIL(COUNT(i_board) / ?) AS cnt "
-				+ " FROM t_board ";
-		
-		if(param.getSearch() != null) {
-			sql += " WHERE title LIKE '%" + param.getSearch() + "%' ";
-		}		
-		
-		try {
-			con = DbBridge.getCon();
-			ps = con.prepareStatement(sql);
-			ps.setInt(1, param.getRowCnt());
-			
-			rs = ps.executeQuery();
-			
-			if(rs.next()) {
-				totalPageCnt = rs.getInt("cnt");
-			}	
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			DbBridge.close(con, ps, rs);
-		}
-		
-		return totalPageCnt;
-	}
+	
 	
 	// SELECT 모든 게시글 리스트 조회하기
 	public static List<BoardVO> getBoardList(BoardVO param) {
@@ -185,34 +161,6 @@ public class BoardDAO {
 	}
 	
 	
-	
-	// UPDATE 조회수 변경(증가) 하기
-	public static int updateBoardHits(BoardVO param) {
-		int result = 0;
-		Connection con = null;
-		PreparedStatement ps = null;
-		
-		String sql = " UPDATE t_board "
-				+ " SET hits = hits + 1"
-				+ " WHERE i_board = ? ";		
-		
-		try {
-			con = DbBridge.getCon();
-			ps = con.prepareStatement(sql);
-			ps.setInt(1, param.getI_board());	
-		
-			result = ps.executeUpdate();
-			
-		} catch (Exception e) {			
-			e.printStackTrace();
-		} finally {
-			DbBridge.close(con, ps);
-		}
-		
-		return result;
-	}
-	
-	
 	// DELETE 게시글 삭제하기 
 	public static int delBoard(BoardVO param) {
 		int result = 0;
@@ -241,11 +189,66 @@ public class BoardDAO {
 	}
 	//--------------------------------------------------------- CRUD ---------------------------------------------------------//
 	
-	// 댓글 달기
-	// 댓글 삭제하기
-	// 댓글 수정하기
+	//모든 게시글 갯수 가져오기 getTotalPageCnt()
+	//조회수 변경(증가) 하기 updateBoardHits()
 	
-	// 답글 달기
+	// SELECT 모든 게시글 갯수 조회하기
+		public static int getTotalPageCnt(BoardVO param) {
+			int totalPageCnt = 0;
+			Connection con = null;
+			PreparedStatement ps = null;
+			ResultSet rs = null;
+			String sql = " SELECT CEIL(COUNT(i_board) / ?) AS cnt "
+					+ " FROM t_board ";
+			
+			if(param.getSearch() != null) {
+				sql += " WHERE title LIKE '%" + param.getSearch() + "%' ";
+			}		
+			
+			try {
+				con = DbBridge.getCon();
+				ps = con.prepareStatement(sql);
+				ps.setInt(1, param.getRowCnt());
+				
+				rs = ps.executeQuery();
+				
+				if(rs.next()) {
+					totalPageCnt = rs.getInt("cnt");
+				}	
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				DbBridge.close(con, ps, rs);
+			}
+			
+			return totalPageCnt;
+		}
+		
+		// UPDATE 조회수 변경(증가) 하기
+		public static int updateBoardHits(BoardVO param) {
+			int result = 0;
+			Connection con = null;
+			PreparedStatement ps = null;
+			
+			String sql = " UPDATE t_board "
+					+ " SET hits = hits + 1"
+					+ " WHERE i_board = ? ";		
+			
+			try {
+				con = DbBridge.getCon();
+				ps = con.prepareStatement(sql);
+				ps.setInt(1, param.getI_board());	
+			
+				result = ps.executeUpdate();
+				
+			} catch (Exception e) {			
+				e.printStackTrace();
+			} finally {
+				DbBridge.close(con, ps);
+			}
+			
+			return result;
+		}
 }
 
 
