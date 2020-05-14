@@ -1,6 +1,8 @@
 package board;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,9 +14,15 @@ import javax.servlet.http.HttpSession;
 
 import board.db.BoardDAO;
 import board.vo.BoardVO;
+import checkboard.db.CheckboardGoalDAO;
+import checkboard.db.CheckboardParticipantDAO;
+import checkboard.db.CheckboardReportDAO;
+import checkboard.db.CheckboardDAO;
+import jdbc.JdbcUtil;
+import jdbc.connection.ConnectionProvider;
 import user.vo.UserVO;
 
-@WebServlet("/boardRegmod")
+@WebServlet("/board/regmod.do")
 public class BoardRegModSev extends HttpServlet {
 	private static final long serialVersionUID = 1L;
    
@@ -22,21 +30,21 @@ public class BoardRegModSev extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//세션에 값세팅
 		HttpSession hs = request.getSession();
-		UserVO loginUser = (UserVO)hs.getAttribute("loginUser");
-		if(loginUser == null) {
-			response.sendRedirect("/login");
+		UserVO authUser = (UserVO)hs.getAttribute("authUser");
+		if(authUser == null) {
+			response.sendRedirect("/user/login.do");
 			return;
 		}
 				
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/boardRegMod.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/board/boardRegMod.jsp");
 		rd.forward(request, response);
 	}
 
 	//작업 용도(insert, update)
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
-		UserVO loginUser = (UserVO)hs.getAttribute("loginUser");		
-		int i_user = loginUser.getI_user();
+		UserVO authUser = (UserVO)hs.getAttribute("authUser");		
+		int i_user = authUser.getI_user();
 		
 		String title = request.getParameter("title");
 		String content = request.getParameter("content");
@@ -45,14 +53,23 @@ public class BoardRegModSev extends HttpServlet {
 		System.out.println("title : " + title);
 		System.out.println("content : " + content);
 		
-		BoardVO bVO = new BoardVO();
-		bVO.setTitle(title);
-		bVO.setContent(content);
-		bVO.setI_user(i_user);
+		BoardVO vo = new BoardVO();
+		vo.setTitle(title);
+		vo.setContent(content);
+		vo.setI_user(i_user);
+
+		Connection conn = null;
+		try {
+			conn = ConnectionProvider.getConnection();
+			BoardDAO.insertBoard(conn, vo);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			JdbcUtil.close(conn);
+		}
 		
-		BoardDAO.insertBoard(bVO);
 		
-		response.sendRedirect("/boardList");
+		response.sendRedirect("/board/list.do");
 	}
 
 }

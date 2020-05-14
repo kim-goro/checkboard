@@ -35,7 +35,7 @@ public class LoginSev extends HttpServlet {
 				break;
 			}
 		}
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/user/login.jsp");
 		rd.forward(request, response);
 	}
 
@@ -64,11 +64,11 @@ public class LoginSev extends HttpServlet {
 		if(cmd == 1) {			
 			HttpSession hs = request.getSession();
 			hs.setAttribute("authUser", param);
-			response.sendRedirect("/boardList.do");
+			response.sendRedirect("/checkboard/list.do");
 			return;
 		}
 
-		response.sendRedirect("/login.do?Msg=" + cmd);		
+		response.sendRedirect("/user/login.do?Msg=" + cmd);		
 	}
 
 }

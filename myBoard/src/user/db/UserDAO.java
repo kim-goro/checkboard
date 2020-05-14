@@ -32,14 +32,14 @@ public class UserDAO {
 
 		String sql = " INSERT INTO t_user "
 				+ " (user_id, user_password, user_email, user_gender, user_hobby, user_birth) "
-				+ " VALUES(?, ?, ?, ?, ?, ?, ?) ";
+				+ " VALUES(?, ?, ?, ?, ?, ?) ";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, param.getUser_id());
 			pstmt.setString(2, param.getUser_password());
-			pstmt.setString(4, param.getUser_email());
-			pstmt.setString(3, param.getUser_gender());
+			pstmt.setString(3, param.getUser_email());
+			pstmt.setString(4, param.getUser_gender());
 			pstmt.setString(5, param.getUser_hobby());
 			pstmt.setString(6, param.getUser_birth());
 			pstmt.executeUpdate();
@@ -60,7 +60,6 @@ public class UserDAO {
 
 	// 유저 조회(검색)하기
 	public static List<UserVO> getById(Connection conn, UserVO param) {
-		int cmd = 0;
 		List<UserVO> list = new ArrayList();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -70,7 +69,7 @@ public class UserDAO {
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, param.getUser_id());
-			pstmt.setString(1, param.getUser_email());
+			pstmt.setString(2, param.getUser_email());
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
@@ -82,6 +81,7 @@ public class UserDAO {
 				vo.setUser_hobby(rs.getString("user_hobby"));
 				vo.setUser_birth(rs.getString("user_birth"));
 				vo.setUser_birth(rs.getString("user_birth"));
+				list.add(vo);
 			}
 
 		} catch (Exception e) {

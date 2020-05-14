@@ -24,6 +24,7 @@
 		<jsp-property-group>
 			<url-pattern>*.jsp</url-pattern>
 			<include-prelude>/WEB-INF/jsp/top.jspf</include-prelude>
+			<include-coda>/WEB-INF/jsp/footer.jspf</include-coda>
 		</jsp-property-group>
 	</jsp-config>
 
@@ -37,7 +38,7 @@
 		<param-name>poolConfig</param-name>
 		<param-value>
 			jdbcdriver=com.mysql.cj.jdbc.Driver
-			jdbcUrl=jdbc:mysql://localhost:3307/checkboard?characterEncoding=utf8
+			jdbcUrl=jdbc:mysql://localhost:3307/checkboard?serverTimezone=UTC
 			dbUser=root
 			dbPass=1234
 			validationQuery=select 1
@@ -48,14 +49,14 @@
 	</context-param>
 
 	<!-- 로그인 필터 -->
-	<filter>
+<!-- 	<filter>
 		<filter-name>LoginCheckFilter</filter-name>
 		<filter-class>filter.LoginCheckFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>LoginCheckFilter</filter-name>
-		<url-pattern>/changePwd.do</url-pattern>
+		<url-pattern>/WEB-INF/jsp/checkboard/*.jsp</url-pattern>
 		<url-pattern>/article/write.do</url-pattern>
 		<url-pattern>/article/modify.do</url-pattern>
-	</filter-mapping>
+	</filter-mapping> -->
 </web-app>

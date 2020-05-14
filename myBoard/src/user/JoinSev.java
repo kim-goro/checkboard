@@ -23,7 +23,7 @@ public class JoinSev extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/join.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/user/join.jsp");
 		rd.forward(request, response);
 	}
 
@@ -47,7 +47,13 @@ public class JoinSev extends HttpServlet {
 		vo.setUser_gender(user_gender);
 		vo.setUser_hobby(user_hobby);
 		vo.setUser_birth(user_birth);
-		vo.setUser_birth(user_birth);
+		
+		System.out.println(user_id);
+		System.out.println(user_password);
+		System.out.println(user_email);
+		System.out.println(user_gender);
+		System.out.println(user_hobby);
+		System.out.println(user_birth);
 
 		int cmd = 0;
 		Connection conn = null;
@@ -73,15 +79,15 @@ public class JoinSev extends HttpServlet {
 		switch(cmd) {
 		case 0:
 			System.out.println("회원 가입에 실패하였습니다.");
-			response.sendRedirect("/join.do");
+			response.sendRedirect("/user/join.do");
 			break;
 		case 1:
 			System.out.println("회원 가입에 성공하였습니다.");
-			response.sendRedirect("/login.do");
+			response.sendRedirect("/user/login.do");
 			break;
 		case 2:
 			System.out.println("회원 가입에 실패하였습니다.");
-			response.sendRedirect("/join.do");
+			response.sendRedirect("/user/join.do");
 			break;
 		}
 	}

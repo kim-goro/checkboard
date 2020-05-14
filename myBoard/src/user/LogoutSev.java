@@ -21,7 +21,7 @@ public class LogoutSev extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		UserDAO.doLogout(request);
-		response.sendRedirect("/login.do");	
+		response.sendRedirect("/user/login.do");	
 	}
 
 	

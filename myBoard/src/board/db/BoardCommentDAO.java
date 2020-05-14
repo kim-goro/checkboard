@@ -8,7 +8,7 @@ import java.util.List;
 
 import board.vo.BoardCommentVO;
 import board.vo.BoardVO;
-import common.DbBridge;
+import jdbc.JdbcUtil;
 
 public class BoardCommentDAO {
 
@@ -19,65 +19,57 @@ public class BoardCommentDAO {
 	// 댓글 수정하기
 	// 댓글 조회하기 getBoardCommenList()
 	
-	public static int insertComment(BoardCommentVO param) {
-		int result = 0;
-		Connection con = null;
-		PreparedStatement ps = null;
+	public static int insertComment(Connection conn, BoardCommentVO param) {
+		int cmd = 0;
+		PreparedStatement pstmt = null;
 		String sql = " INSERT INTO t_board_comment "
 				+ " (i_board, content, i_user) "
 				+ " VALUES "
 				+ " (?, ?, ?) ";
-		System.out.println(param.getI_board());
-		System.out.println(param.getContent());
-		System.out.println(param.getI_user());
 		
 		try {
-			con = DbBridge.getCon();
-			ps = con.prepareStatement(sql);
-			ps.setInt(1, param.getI_board());
-			ps.setString(2, param.getContent());
-			ps.setInt(3, param.getI_user());
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, param.getI_board());
+			pstmt.setString(2, param.getContent());
+			pstmt.setInt(3, param.getI_user());
 			
-			result = ps.executeUpdate();
+			cmd = pstmt.executeUpdate();
 			
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
-			DbBridge.close(con,  ps);			
+			JdbcUtil.close(pstmt);		
 		}
 		
-		return result;
+		return cmd;
 	}
 	
-	public static int deleteComment(int i_comment) {
-		int result = 0;
-		Connection con = null;
-		PreparedStatement ps = null;
+	public static int deleteComment(Connection conn, int i_comment) {
+		int cmd = 0;
+		PreparedStatement pstmt = null;
 		String sql = " DELETE FROM t_board_comment "
 				+ " WHERE "
 				+ " i_comment= ? ";
 		
 		try {
-			con = DbBridge.getCon();
-			ps = con.prepareStatement(sql);
-			ps.setInt(1, i_comment);
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, i_comment);
 			
-			result = ps.executeUpdate();
+			cmd = pstmt.executeUpdate();
 			
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
-			DbBridge.close(con,  ps);			
+			JdbcUtil.close(pstmt);		
 		}
 		
-		return result;
+		return cmd;
 	}
 
-	public static List<BoardCommentVO> getBoardCommenList(int i_board) {
+	public static List<BoardCommentVO> getBoardCommenList(Connection conn, int i_board) {
 		List<BoardCommentVO> list = new ArrayList();
 		
-		Connection con = null;
-		PreparedStatement ps = null;
+		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
 		String sql = " SELECT "
@@ -90,12 +82,11 @@ public class BoardCommentDAO {
 				+ " ON B.i_user = C.i_user "
 				+ " AND C.seq = 1 "
 				+ " WHERE A.i_board = ? ";
-		try {
-			con = DbBridge.getCon();
-			ps = con.prepareStatement(sql);
-			ps.setInt(1, i_board);
+		try {;
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, i_board);
 			
-			rs = ps.executeQuery();
+			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
 				
@@ -120,7 +111,8 @@ public class BoardCommentDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DbBridge.close(con, ps, rs);
+			JdbcUtil.close(rs);
+			JdbcUtil.close(pstmt);
 		}
 		
 		return list;

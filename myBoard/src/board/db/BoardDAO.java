@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import board.vo.BoardVO;
+import jdbc.JdbcUtil;
 
 public class BoardDAO {
 	
@@ -19,42 +20,39 @@ public class BoardDAO {
 	// 모든 게시물리스트 가져오기 getBoardList()
 	
 	// CREATE 게시글 등록
-	public static int insertBoard(BoardVO param) {
-		int result = 0;
-		
-		Connection con = null;
-		PreparedStatement ps = null;
+	public static int insertBoard(Connection conn, BoardVO param) {
+		int cmd = 0;
+		PreparedStatement pstmt = null;
 		String sql = " INSERT INTO t_board "
 				+ " (title, content, i_user) "
 				+ " VALUES "
 				+ " (?, ?, ?) ";
 		
 		try {
-			con = DbBridge.getCon();
-			ps = con.prepareStatement(sql);
-			ps.setString(1, param.getTitle());
-			ps.setString(2, param.getContent());
-			ps.setInt(3, param.getI_user());			
+			pstmt = conn.prepareStatement(sql);
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, param.getTitle());
+			pstmt.setString(2, param.getContent());
+			pstmt.setInt(3, param.getI_user());			
 			
-			result = ps.executeUpdate();
+			cmd = pstmt.executeUpdate();
 			
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
-			DbBridge.close(con,  ps);			
+			JdbcUtil.close(pstmt);	
 		}
 		
-		return result;
+		return cmd;
 	}
 	
 	
 	// SELECT 해당 게시글 조회하기
-	public static BoardVO getBoard(BoardVO param) {
+	public static BoardVO getBoard(Connection conn, BoardVO param) {
 		BoardVO vo = null;
-		
-		Connection con = null;
-		PreparedStatement ps = null;
+		PreparedStatement pstmt = null;
 		ResultSet rs = null;
+		
 		String sql = " SELECT "
 				+ " A.title, A.hits, A.r_dt, A.m_dt "
 				+ " , A.content, A.i_user, B.u_nickname "
@@ -65,10 +63,9 @@ public class BoardDAO {
 				+ " ORDER BY r_dt DESC ";
 		
 		try {
-			con = DbBridge.getCon();
-			ps = con.prepareStatement(sql);
-			ps.setInt(1, param.getI_board());			
-			rs = ps.executeQuery();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, param.getI_board());			
+			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {				
 				String title = rs.getString("title");
@@ -93,7 +90,8 @@ public class BoardDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DbBridge.close(con, ps, rs);
+			JdbcUtil.close(rs);
+			JdbcUtil.close(pstmt);
 		}
 		
 		return vo;
@@ -102,12 +100,11 @@ public class BoardDAO {
 	
 	
 	// SELECT 모든 게시글 리스트 조회하기
-	public static List<BoardVO> getBoardList(BoardVO param) {
+	public static List<BoardVO> getBoardList(Connection conn, BoardVO param) {
 		List<BoardVO> list = new ArrayList();
-		
-		Connection con = null;
-		PreparedStatement ps = null;
+		PreparedStatement pstmt = null;
 		ResultSet rs = null;
+		
 		String sql = " SELECT A.i_board, A.title, A.hits, A.r_dt "
 				+ " , B.u_nickname , C.i_user, ifnull(C.img, '') as img "
 				+ " FROM t_board A "
@@ -123,12 +120,11 @@ public class BoardDAO {
 		sql += " ORDER BY r_dt DESC LIMIT ?, ? ";
 		
 		try {
-			con = DbBridge.getCon();
-			ps = con.prepareStatement(sql);
-			ps.setInt(1, param.getsIdx());
-			ps.setInt(2, param.getRowCnt());
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, param.getsIdx());
+			pstmt.setInt(2, param.getRowCnt());
 			
-			rs = ps.executeQuery();
+			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
 				int i_board = rs.getInt("i_board");
@@ -154,7 +150,8 @@ public class BoardDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DbBridge.close(con, ps, rs);
+			JdbcUtil.close(rs);
+			JdbcUtil.close(pstmt);
 		}
 		
 		return list;
@@ -162,30 +159,28 @@ public class BoardDAO {
 	
 	
 	// DELETE 게시글 삭제하기 
-	public static int delBoard(BoardVO param) {
-		int result = 0;
-		Connection con = null;
-		PreparedStatement ps = null;		
+	public static int delBoard(Connection conn, BoardVO param) {
+		int cmd = 0;
+		PreparedStatement pstmt = null;		
 		
 		String sql = " DELETE FROM t_board "
 				+ " WHERE i_board = ? "
 				+ " AND i_user = ? ";	
 		
 		try {
-			con = DbBridge.getCon();
-			ps = con.prepareStatement(sql);
-			ps.setInt(1, param.getI_board());
-			ps.setInt(2, param.getI_user());
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, param.getI_board());
+			pstmt.setInt(2, param.getI_user());
 			
-			result = ps.executeUpdate();
+			cmd = pstmt.executeUpdate();
 			
 		} catch (Exception e) {			
 			e.printStackTrace();
 		} finally {
-			DbBridge.close(con, ps);
+			JdbcUtil.close(pstmt);
 		}
 		
-		return result;
+		return cmd;
 	}
 	//--------------------------------------------------------- CRUD ---------------------------------------------------------//
 	
@@ -193,11 +188,11 @@ public class BoardDAO {
 	//조회수 변경(증가) 하기 updateBoardHits()
 	
 	// SELECT 모든 게시글 갯수 조회하기
-		public static int getTotalPageCnt(BoardVO param) {
+		public static int getTotalPageCnt(Connection conn, BoardVO param) {
 			int totalPageCnt = 0;
-			Connection con = null;
-			PreparedStatement ps = null;
+			PreparedStatement pstmt = null;
 			ResultSet rs = null;
+			
 			String sql = " SELECT CEIL(COUNT(i_board) / ?) AS cnt "
 					+ " FROM t_board ";
 			
@@ -206,11 +201,10 @@ public class BoardDAO {
 			}		
 			
 			try {
-				con = DbBridge.getCon();
-				ps = con.prepareStatement(sql);
-				ps.setInt(1, param.getRowCnt());
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, param.getRowCnt());
 				
-				rs = ps.executeQuery();
+				rs = pstmt.executeQuery();
 				
 				if(rs.next()) {
 					totalPageCnt = rs.getInt("cnt");
@@ -218,36 +212,35 @@ public class BoardDAO {
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
-				DbBridge.close(con, ps, rs);
+				JdbcUtil.close(rs);
+				JdbcUtil.close(pstmt);
 			}
 			
 			return totalPageCnt;
 		}
 		
 		// UPDATE 조회수 변경(증가) 하기
-		public static int updateBoardHits(BoardVO param) {
-			int result = 0;
-			Connection con = null;
-			PreparedStatement ps = null;
+		public static int updateBoardHits(Connection conn, BoardVO param) {
+			int cmd = 0;
+			PreparedStatement pstmt = null;
 			
 			String sql = " UPDATE t_board "
 					+ " SET hits = hits + 1"
 					+ " WHERE i_board = ? ";		
 			
 			try {
-				con = DbBridge.getCon();
-				ps = con.prepareStatement(sql);
-				ps.setInt(1, param.getI_board());	
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, param.getI_board());	
 			
-				result = ps.executeUpdate();
+				cmd = pstmt.executeUpdate();
 				
 			} catch (Exception e) {			
 				e.printStackTrace();
 			} finally {
-				DbBridge.close(con, ps);
+				JdbcUtil.close(pstmt);
 			}
 			
-			return result;
+			return cmd;
 		}
 }
 
