@@ -49,8 +49,8 @@
 <body>
 	<div>
 		${ authUser.user_id }님 환영합니다.
-		<a href="/checkboard/regmod">
-			<button>글쓰기</button>
+		<a href="/checkboard/regmod.do">
+			<button>체크보드 생성하기</button>
 		</a>
 	</div>
 	<div>
@@ -77,7 +77,7 @@
 			</tr>
 			<c:forEach var="goal" items="indexMap.value">
 				<tr row class="pointer trSelected">
-					<td colspan="6" class="fontCenter"> -> ${vo.goalName }</td>
+					<td colspan="7" class="fontCenter"> -> ${vo.goalName }</td>
 				</tr>
 			</c:forEach>
 			</c:forEach>

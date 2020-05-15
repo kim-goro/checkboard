@@ -31,7 +31,7 @@ public class CheckboardRegModSev extends HttpServlet {
 	// 화면 띄우는 용도
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/checkboard/regMod.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/checkboard/checkboardRegMod.jsp");
 		rd.forward(request, response);
 	}
 

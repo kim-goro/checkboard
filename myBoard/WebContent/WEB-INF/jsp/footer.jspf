@@ -10,7 +10,7 @@
 <body>
 	<u:isLogin>
 		<table border="1">
-			<tr>
+			<tr bgcolor="green">
 				<td> 하단 푸터 입니다. </td>
 			</tr>
 		</table>

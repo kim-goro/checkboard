@@ -105,7 +105,7 @@ public class UserDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
-		String sql = " SELECT * FROM t_user " + "WHERE u_id = ? ";
+		String sql = " SELECT * FROM t_user " + "WHERE user_id = ? ";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -113,8 +113,8 @@ public class UserDAO {
 
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
-				String u_pw = rs.getString("u_pw");
-				if (u_pw.equals(param.getUser_password())) {
+				String user_password = rs.getString("user_password");
+				if (user_password.equals(param.getUser_password())) {
 					cmd = 1; // 로그인 성공
 					param.setUser_password(null);
 					param.setUser_id(rs.getString("user_id"));

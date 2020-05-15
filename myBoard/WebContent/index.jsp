@@ -10,7 +10,7 @@
 </head>
 <body>
 	<u:isLogin>
-		<!-- 체크보드 리스트로 가기 -->
+		<jsp:forward page="/checkboard/list.do"/>
 	</u:isLogin>
 	<u:notLogin>
 		<jsp:forward page="/WEB-INF/jsp/user/login.jsp"/>

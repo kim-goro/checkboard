@@ -9,8 +9,8 @@
 </head>
 <body>
 	<u:isLogin>
-		<table border="1">
-			<tr>
+		<table border="1" >
+			<tr bgcolor="red">
 				<td><a href="#"> DASHBOARD </a></td>
 				<td><a href="#"> CALENDER </a></td>
 				<td><a href="#"> TEAM </a></td>

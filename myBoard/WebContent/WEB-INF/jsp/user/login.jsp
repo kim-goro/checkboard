@@ -11,10 +11,10 @@
 	<div class="flexContainer flexCenter" style="flex-direction: column;">
 		<form class="solidForm" action="user/login.do" method="POST">
 			<div class="marBottom10">
-				<input type="text" name="u_id" placeholder="아이디" value="kim">
+				<input type="text" name="user_id" placeholder="아이디" value="kim">
 			</div>
 			<div class="marBottom10">
-				<input type="password" name="u_pw" placeholder="비밀번호" value="1234">
+				<input type="password" name="user_password" placeholder="비밀번호" value="1234">
 			</div>
 			<div class="flexContainer flexCenter" style="height: 40px;">
 				<input type="submit" value="로그인"/> &nbsp; &nbsp; 
