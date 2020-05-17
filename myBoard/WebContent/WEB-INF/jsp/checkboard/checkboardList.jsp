@@ -49,43 +49,42 @@
 <body>
 	<div>
 		${ authUser.user_id }님 환영합니다.
-		<a href="/checkboard/regmod.do">
-			<button>체크보드 생성하기</button>
-		</a>
+		<a href="/checkboard/regmod.do"><button>체크보드 생성하기</button></a>
+		<a href="/user/profile.do"><button>프로필 변경</button></a>
 	</div>
 	<div>
 		<table>
 			<tr>
 				<th>번호</th>
+				<th>이미지</th>
 				<th>생성자</th>
 				<th>제목</th>
-				<th>설명</th>
 				<th>생성일</th>
 				<th>기한</th>
-				<th>상태<th>
 			</tr>
 			
 			<c:forEach var="indexMap" items="${checkboardMap}">
-			<tr class="pointer trSelected" onclick="moveToDetail(${vo.i_checkboard})">
-				<td class="fontCenter">${indexMap.key.i_checkboard }</td>
-				<td class="fontCenter">${indexMap.key.checkboard_i_user }</td>
-				<td class="fontCenter">${indexMap.key.checkboard_title }</td>
-				<td class="fontCenter">${indexMap.key.checkboard_decription }</td>
-				<td class="fontCenter">${indexMap.key.r_dt }</td>
-				<td class="fontCenter">${indexMap.key.due_dt }</td>
-				<td class="fontCenter">${indexMap.key.checkboard_state }</td>
-			</tr>
-			<c:forEach var="goal" items="indexMap.value">
-				<tr row class="pointer trSelected">
-					<td colspan="7" class="fontCenter"> -> ${vo.goalName }</td>
+				<tr class="pointer trSelected" onclick="moveToDetail(${indexMap.key.i_checkboard})">
+					<td class="fontCenter">${indexMap.key.i_checkboard }</td>
+					<td class="fontCenter">${indexMap.key.user_img }</td>
+					<td class="fontCenter">${indexMap.key.user_id }</td>
+					<td class="fontCenter">${indexMap.key.checkboard_title }</td>
+					<td class="fontCenter">${indexMap.key.r_dt }</td>
+					<td class="fontCenter">${indexMap.key.due_dt }</td>
 				</tr>
-			</c:forEach>
+				<c:forEach var="goal" items="${indexMap.value}">
+					<c:if test="${goal.goalName ne null && goal.goalName ne ''}">
+						<tr>
+							<td colspan="6"> -> ${goal.goalName}</td>
+						</tr>
+					</c:if>
+				</c:forEach>
 			</c:forEach>
 		</table>
 	</div>
 	<script>
 		function moveToDetail(i_checkboard) {
-			location.href = '/checkboard/detail?i_checkboard=' + i_checkboard
+			location.href = '/checkboard/detail.do?i_checkboard=' + i_checkboard
 		}
 	</script>
 </body>

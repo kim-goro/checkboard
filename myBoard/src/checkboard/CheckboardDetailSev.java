@@ -37,6 +37,7 @@ public class CheckboardDetailSev extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
 		UserVO authUser = (UserVO)hs.getAttribute("authUser");
+		request.setAttribute("authUser", authUser);
 		if(authUser == null) {
 			response.sendRedirect("/user/login.do");
 			return;
@@ -55,7 +56,6 @@ public class CheckboardDetailSev extends HttpServlet {
 			request.setAttribute("checkboard_goal", CheckboardGoalDAO.getCheckboardList_goal(conn, param));
 			request.setAttribute("checkboard_participant", CheckboardParticipantDAO.getCheckboardList_participants(conn, param));
 			request.setAttribute("checkboard_report", CheckboardReportDAO.getCheckboardList_report(conn, param));
-			request.setAttribute("participants", CheckboardParticipantDAO.getCheckboardList_participants(conn, param));
 			
 			conn.commit();
 		} catch (SQLException e) {

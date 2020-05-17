@@ -34,15 +34,11 @@
 				<img src="/img/noProfile.png" alt="프로필 이미지 없음">
 			</c:if>
 			<c:if test="${img != null}">
-				<a href="/profileImgs">
-					<img src="/img/${loginUser.i_user}/${img}" alt="프로필 이미지">
-				</a>
+					<img src="/img/${authUser.i_user}/${img}" alt="프로필 이미지">
 			</c:if>
 		</div>
 		<div class="frmContainer">
-			<form id="frm" action="profileDetail" 
-				method="post" onsubmit="return chkProfile()" 
-				enctype="multipart/form-data">
+			<form id="frm" action="/user/profile.do" method="POST" onsubmit="return chkProfile()" enctype="multipart/form-data">
 				<label>수정 이미지: <input type="file" name="profileImg" accept="image/*"></label>
 				<div>
 					<input type="submit" value="업로드">

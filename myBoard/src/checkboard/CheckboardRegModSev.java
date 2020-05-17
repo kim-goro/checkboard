@@ -45,8 +45,8 @@ public class CheckboardRegModSev extends HttpServlet {
 		String checkboard_title = request.getParameter("checkboard_title");
 		String checkboard_decription = request.getParameter("checkboard_decription");
 		String due_dt = request.getParameter("due_dt");
-		String[] goals = request.getParameterValues("goals");
-		String[] friends = request.getParameterValues("friends");
+		String[] goalName = request.getParameterValues("goalName");
+		// String[] friends = request.getParameterValues("friends");
 
 		
 
@@ -62,19 +62,24 @@ public class CheckboardRegModSev extends HttpServlet {
 			vo.setCheckboard_decription(checkboard_decription);
 			vo.setDue_dt(due_dt);
 			CheckboardDAO.CreateCheckboard(conn, vo);
-			for (String goalName : goals) {
+			
+			conn.commit();
+			
+			for (String names : goalName) {
 				CheckBoardGoalVO vo2 = new CheckBoardGoalVO();
-				vo2.setGoalName(goalName);
 				vo2.setI_checkboard(CheckboardDAO.getCheckboardPk(conn, i_user));
+				vo2.setGoalName(names);
 				CheckboardGoalDAO.CreateCheckboard_goal(conn, vo2);
 			}
-			for (String f_i_user : friends) {
-				CheckBoardParticipantsVO vo3 = new CheckBoardParticipantsVO();
-				vo3.setI_user(Integer.parseInt(f_i_user));
-				vo3.setI_checkboard(CheckboardDAO.getCheckboardPk(conn, i_user));
-				CheckboardParticipantDAO.InsertCheckboard_participants(conn, vo3);
-			}
 			
+			
+//			for (String f_i_user : friends) {
+//				CheckBoardParticipantsVO vo3 = new CheckBoardParticipantsVO();
+//				vo3.setI_user(Integer.parseInt(f_i_user));
+//				vo3.setI_checkboard(CheckboardDAO.getCheckboardPk(conn, i_user));
+//				CheckboardParticipantDAO.InsertCheckboard_participants(conn, vo3);
+//			}
+//			
 			conn.commit();
 		} catch (SQLException e) {
 			JdbcUtil.rollback(conn);
@@ -83,7 +88,7 @@ public class CheckboardRegModSev extends HttpServlet {
 			JdbcUtil.close(conn);
 		}
 
-		response.sendRedirect("/checkboard/list.do");
+		//response.sendRedirect("/checkboard/list.do");
 	}
 
 }

@@ -27,11 +27,11 @@ public class CheckboardGoalDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
-		String sql = " INSERT INTO t_checkboardgoal " + " (i_checkboard, goalName) " + " VALUES(?, ?) ";
+		String sql = " INSERT INTO t_checkboardgoal(i_checkboard, goalName) " + " VALUES(?, ?) ";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, param.getI_checkboardgoal());
+			pstmt.setInt(1, param.getI_checkboard());
 			pstmt.setString(2, param.getGoalName());
 			pstmt.executeUpdate();
 			System.out.println(param.getGoalName() + "등록을 완료하였습니다.");
@@ -63,12 +63,16 @@ public class CheckboardGoalDAO {
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				CheckBoardGoalVO vo = new CheckBoardGoalVO();
-				vo.setI_checkboardgoal(rs.getInt("i_checkboardgoal"));
-				vo.setI_checkboard(rs.getInt("i_checkboard"));
-				vo.setGoalName(rs.getString("goalName"));
-				vo.setR_dt(rs.getString("r_dt"));
-				list.add(vo);
+				if(rs.getString("goalName") != null && rs.getString("goalName") != "")
+				{
+					CheckBoardGoalVO vo = new CheckBoardGoalVO();
+					vo.setI_checkboardgoal(rs.getInt("i_checkboardgoal"));
+					vo.setI_checkboard(rs.getInt("i_checkboard"));
+					vo.setGoalName(rs.getString("goalName"));
+					vo.setR_dt(rs.getString("r_dt"));
+					System.out.println(rs.getString("goalName"));
+					list.add(vo);
+				}
 			}
 
 		} catch (Exception e) {

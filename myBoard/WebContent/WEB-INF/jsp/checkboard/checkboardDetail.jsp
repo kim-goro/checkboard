@@ -37,51 +37,69 @@
 	<div>기한: ${checkboard.due_dt }</div>
 	<div>상태: ${checkboard.checkboard_state }</div>
 	
-	<c:if test="${authUser.i_user == checkboard.i_user }">
+	<c:if test="${authUser.i_user == checkboard.checkboard_i_user }">
 		<div>
-			<button>수정</button>
-			<button onclick="clkDelBtn(${checkboard.i_checkboard})">삭제</button>
+			<button>체크보드 수정</button>
+			<button onclick="clkDelBtn(${checkboard.i_checkboard})">체크보드 삭제</button>
 		</div>
 	</c:if>
 	
-	<c:forEach var="goal" items="${checkboard_goal}">
-		<tr class="pointer trSelected" onclick="moveToDetail(${goal.i_checkboardgoal})">
-			<td  class="fontCenter"> -> ${goal.goalName}</td>
-			<td class="fontCenter"><button onclick="clkDelBtn(${goal.i_checkboardgoal})">삭제</button></td>
-		</tr>
-	</c:forEach>
 	
-	<div>참가자</div>
-	<table>
-		<c:forEach var="vo" items="${participants}">
+	
+	<div>보고자</div>
+	<c:forEach var="report" items="${checkboard_report}">
+		<table>
 			<tr>
-				<td class="commentItem">${participants.i_user }</td>
-				<td class="conmmentDel">
-					<c:if test="${vo.i_user == authUser.i_user}">
-						<a href="/board/Comment.do?i_comment=${vo.i_comment}&i_board=${detail.i_board}&i_user=${vo.i_user}"><button> 삭제 </button></a>
-					</c:if>
-				</td>
+				<td> 보고자 </td>
+				<td> 목표 </td>
+				<td> 상태 </td>
+				<td> 날짜 </td>
 			</tr>
-		</c:forEach>
-	</table>
-	
-
-	<div>보고하기</div>
-	<div>
-		<form action="/board/report.do" if="frm" method="POST" onsubmit="return chkComment()">
-			<input type="hidden" name="i_checkboardgoal" value="${goal.i_checkboardgoal}">
+			<tr>
+				<td>${report.i_user}</td>
+				<td>${report.i_checkboardgoal}</td>
+				<td>${report.goalState}</td>
+				<td>${report.r_dt}</td>
+			</tr>
+		</table>
+	</c:forEach>
+	<form class="solidForm" id="frm" action="/checkboard/report.do" method="POST" onsubmit="return chkReport()">
+		<table>
+			<c:forEach var="goal" items="${checkboard_goal}">
+				<tr>
+					<td><input type='checkbox' name=i_checkboardgoal value="${goal.i_checkboardgoal}"></td>
+					<td class="fontCenter"> -> ${goal.goalName}</td>
+				</tr>
+			</c:forEach>
+		</table>
+		<div>보고하기</div>
+		<div>
+			<input type="hidden" name="i_checkboard" value="${checkboard.i_checkboard}">
 			<input type="submit" value="보고하기">
-		</form>
-	</div>
+		</div>
+	</form> 
+	
+	<c:if test="${checkboard.checkboard_i_user == authUser.i_user}">
+		<div>참가자</div>
+		<table>
+			<c:forEach var="pa" items="${participants}">
+				<tr>
+					<td class="commentItem">${pa.i_user}</td>
+					<td class="conmmentDel"></td>
+				</tr>
+			</c:forEach>
+		</table>
+		<a href="/user/FriendList.do?i_checkboard=${checkboard.i_checkboard}">참가자 추가하기</a>
+	</c:if>
 	
 	<script>
-		function clkDelBtn(i_board) {
-			var result = confirm(i_board + '번 글을 삭제하시겠습니까?')
+		function clkDelBtn(i_checkboard) {
+			var result = confirm(i_checkboard + '번 체크보드를 삭제하시겠습니까?')
 			if(result) {
-				location.href = '/boardDel?i_board=' + i_board	
+				location.href = '/checkboard/Del.do?i_checkboard=' + i_checkboard	
 			}
 		}
- 		function chkComment() {
+ 		function chkReport() {
 			if(frm.content.value.length == 0) {
 				frm.i_board.focus()
 				alert('댓긇 내용을 작성해 주세요!')		

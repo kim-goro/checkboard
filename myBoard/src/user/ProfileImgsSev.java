@@ -12,13 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import common.Utils;
 import jdbc.JdbcUtil;
 import jdbc.connection.ConnectionProvider;
 import user.db.UserDAO;
 import user.db.UserImgDAO;
+import user.vo.UserImgVO;
 import user.vo.UserVO;
 
-@WebServlet("/profileImgs")
+@WebServlet("/user/profile.do")
 public class ProfileImgsSev extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -28,7 +30,7 @@ public class ProfileImgsSev extends HttpServlet {
 		HttpSession hs = request.getSession();
 		UserVO authUser = (UserVO)hs.getAttribute("authUser");
 		if(authUser == null) {
-			response.sendRedirect("/login.do");
+			response.sendRedirect("/user/login.do");
 			return;
 		}
 		
@@ -36,7 +38,8 @@ public class ProfileImgsSev extends HttpServlet {
 		Connection conn = null;
 		try {
 			conn = ConnectionProvider.getConnection();
-			request.setAttribute("imgList", UserImgDAO.getProfileImg(conn, authUser.getI_user()));
+			request.setAttribute("authUser",authUser);
+			request.setAttribute("img", UserImgDAO.getProfileImg(conn, authUser.getI_user()));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -44,12 +47,32 @@ public class ProfileImgsSev extends HttpServlet {
 		}
 		
 		
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/profileImgs.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/user/profileDetail.jsp");
 		rd.forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		HttpSession hs = request.getSession();
+		UserVO authUser = (UserVO)hs.getAttribute("authUser");
+				
+		String filePath = String.valueOf(authUser.getI_user());		
+		String fileNm = Utils.uploadFile(request, filePath);
+		
+		UserImgVO param = new UserImgVO();
+		param.setI_user(authUser.getI_user());
+		param.setImg(fileNm);
+		
+		int cmd = 0;
+		Connection conn = null;
+		try {
+			conn = ConnectionProvider.getConnection();
+			cmd = UserImgDAO.regUserImg(conn, param);		
+			doGet(request, response);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			JdbcUtil.close(conn);
+		}
 	}
 
 }

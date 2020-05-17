@@ -9,6 +9,26 @@ public class CheckboardVO {
 	private String due_dt; // null
 	private String checkboard_state; // null
 	
+	// 유저 아아디 임시 보관
+	private String user_id;
+	private String user_img;
+	
+	public String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
+
+	public String getUser_img() {
+		return user_img;
+	}
+
+	public void setUser_img(String user_img) {
+		this.user_img = user_img;
+	}
+
 	public enum checkboard_state{
 		Y,
 		N

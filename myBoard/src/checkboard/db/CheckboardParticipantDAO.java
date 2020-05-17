@@ -83,7 +83,7 @@ public class CheckboardParticipantDAO {
 	}
 	
 	// 체크보드 팀원 삭제하기
-		public static int DeleteAllCheckboard_goal(Connection conn, CheckboardVO param) {
+		public static int DeleteAllCheckboard_participants(Connection conn, CheckboardVO param) {
 			int count = 0;
 			PreparedStatement pstmt = null;
 
@@ -103,7 +103,7 @@ public class CheckboardParticipantDAO {
 		}
 
 	// 해당 체크보드 팀원 삭제하기
-	public static int DeleteCheckboard_goal(Connection conn, CheckBoardParticipantsVO param) {
+	public static int DeleteCheckboard_participants(Connection conn, CheckBoardParticipantsVO param) {
 		int count = 0;
 		PreparedStatement pstmt = null;
 

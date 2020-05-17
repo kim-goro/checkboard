@@ -32,15 +32,15 @@ public class CheckboardDAO {
 		ResultSet rs = null;
 
 		String sql = " INSERT INTO t_checkboard "
-				+ " (checkboard_i_user, checkbo ard_title, checkboard_decription, due_dt) "
-				+ " VALUES(?, ?, ?, ?, ?, ?, ?) ";
+				+ " (checkboard_i_user, checkboard_title, checkboard_decription, due_dt) "
+				+ " VALUES(?, ?, ?, ?) ";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, param.getCheckboard_i_user());
 			pstmt.setString(2, param.getCheckboard_title());
-			pstmt.setString(4, param.getCheckboard_decription());
-			pstmt.setString(3, param.getDue_dt());
+			pstmt.setString(3, param.getCheckboard_decription());
+			pstmt.setString(4, param.getDue_dt());
 			pstmt.executeUpdate();
 			System.out.println(param.getCheckboard_title() + "등록을 완료하였습니다.");
 			cmd = 1;
@@ -95,16 +95,15 @@ public class CheckboardDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
-		String sql = " SELECT A.i_board, A.title, A.hits, A.r_dt "
-				+ " , B.u_nickname , C.i_user, ifnull(C.img, '') as img "
-				+ " FROM t_checkboard A "
-				+ " WHERE A.checkboard_i_user = ?"
-				+ " INNER JOIN t_user B "
-				+ " ON A.checkboard_i_user = B.i_user "
-				+ " LEFT JOIN t_user_img C " 
- 				+ " ON A.checkboard_i_user = C.i_user ";
-
-		sql += " ORDER BY r_dt DESC LIMIT ?, ? ";
+		String sql ="SELECT A.i_checkboard, A.checkboard_title, A.r_dt, A.due_dt, B.user_id, ifnull(C.img, '') as img" + 
+				"				FROM t_checkboard A" + 
+				"					INNER JOIN t_user B" + 
+				"					ON A.checkboard_i_user = B.i_user" + 
+				"					LEFT JOIN t_user_img C" + 
+				"					ON A.checkboard_i_user = C.i_user" + 
+				"				WHERE A.checkboard_i_user = ?" + 
+				"				ORDER BY r_dt DESC" + 
+				"				LIMIT ?, ?";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -116,12 +115,11 @@ public class CheckboardDAO {
 			while (rs.next()) {
 				CheckboardVO vo = new CheckboardVO();
 				vo.setI_checkboard(rs.getInt("i_checkboard"));
-				vo.setCheckboard_i_user(rs.getInt("checkboard_i_user"));
 				vo.setCheckboard_title(rs.getString("checkboard_title"));
-				vo.setCheckboard_decription(rs.getString("checkboard_decription"));
 				vo.setR_dt(rs.getString("r_dt"));
 				vo.setDue_dt(rs.getString("due_dt"));
-				vo.setCheckboard_state(rs.getString("checkboard_state"));
+				vo.setUser_id(rs.getString("user_id"));
+				vo.setUser_img(rs.getString("img"));
 				list.add(vo);
 			}
 
@@ -219,7 +217,7 @@ public class CheckboardDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
-		String sql = "SELECT i_checkboard FROM t_checkboard  WHERE checkboard_i_user = ? ORDER BY i_checkboard DESC LIMIT 1";
+		String sql = "SELECT i_checkboard FROM t_checkboard  WHERE checkboard_i_user = ? ORDER BY i_checkboard DESC";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -228,6 +226,7 @@ public class CheckboardDAO {
 
 			while (rs.next()) {
 				pk = rs.getInt("i_checkboard");
+				break;
 			}
 
 		} catch (Exception e) {

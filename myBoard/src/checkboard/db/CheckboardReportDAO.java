@@ -25,25 +25,21 @@ public class CheckboardReportDAO {
 	// 보고서 제출하기
 	public static int InsertCheckboard_report(Connection conn, CheckBoardReportVO param) throws SQLException {
 		int cmd = 0;
-		System.out.println(param.getGoalState() + "보고를 시도하였습니다.");
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
-		String sql = " INSERT INTO t_checkboardreport " + " (i_checkboard, i_user, i_checkboardgoal, goalState,) "
-				+ " VALUES(?, ?, ?, ?) ";
+		String sql = " INSERT INTO t_checkboardreport(i_checkboard, i_user, i_checkboardgoal, goalState)"
+				+ " VALUES(?, ?, ?, 'Y') ";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, param.getI_checkboard());
 			pstmt.setInt(2, param.getI_user());
 			pstmt.setInt(3, param.getI_checkboardgoal());
-			pstmt.setString(4, param.getGoalState());
 			pstmt.executeUpdate();
-			System.out.println(param.getGoalState() + "보고를 완료하였습니다.");
 			cmd = 1;
 
 		} catch (Exception e) {
-			System.out.println(param.getGoalState() + "보고를 실패하였습니다.");
 			cmd = 2;
 			e.printStackTrace();
 		} finally {
@@ -56,6 +52,11 @@ public class CheckboardReportDAO {
 
 	// 보고서 가져오기
 	public static List<CheckBoardReportVO> getCheckboardList_report(Connection conn, CheckboardVO param) {
+		// 오늘 날짜라 가장 가까운 3개의 날짜만 내림차순으로, i_user별로 가져오기
+		// i_checkboard의 연결된 
+		// i_checkboardgoal 중에서 날짜가 가장 최신순으로 3개의 날짜 저장하기
+		// 3개의 날짜에 해당되는 i_checkboard의 연결된 i_checkboardgoal의 i_user 저장하기
+		// 저장된 i_user별로 CheckBoardReportVO 반환하기
 		List<CheckBoardReportVO> list = new ArrayList();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -74,7 +75,7 @@ public class CheckboardReportDAO {
 				vo.setI_user(rs.getInt("i_user"));
 				vo.setI_checkboardgoal(rs.getInt("i_checkboardgoal"));
 				vo.setGoalState(rs.getString("goalState"));
-				vo.getR_dt();
+				vo.setR_dt(rs.getString("r_dt"));
 				list.add(vo);
 			}
 

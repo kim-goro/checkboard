@@ -47,7 +47,7 @@ public class UserImgDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
-		String sql = " SELECT img FROM t_user_img " + " WHERE i_user = ? ";
+		String sql = " SELECT img FROM t_user_img WHERE i_user = ? ";
 
 		try {
 			pstmt = conn.prepareStatement(sql);

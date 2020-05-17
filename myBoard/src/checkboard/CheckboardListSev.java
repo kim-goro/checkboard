@@ -5,7 +5,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -61,7 +63,7 @@ public class CheckboardListSev extends HttpServlet {
 			request.setAttribute("totalPageCnt", CheckboardDAO.getTotalPageCnt(conn, RowCnt));
 			List<CheckboardVO> checkboardList = CheckboardDAO.getCheckboardList(conn, param, sIdx, RowCnt);
 			// 맵 < 체크보드VO : 체크보드골list>
-			HashMap<CheckboardVO, List<CheckBoardGoalVO>> map = new HashMap<>();
+			HashMap<CheckboardVO, List<CheckBoardGoalVO>> map = new LinkedHashMap<>();
 			for(CheckboardVO index : checkboardList) {
 				map.put(index,CheckboardGoalDAO.getCheckboardList_goal(conn, index));
 			}

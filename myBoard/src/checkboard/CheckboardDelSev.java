@@ -23,7 +23,7 @@ import jdbc.JdbcUtil;
 import jdbc.connection.ConnectionProvider;
 import user.vo.UserVO;
 
-@WebServlet("/checkboard/del.do")
+@WebServlet("/checkboard/Del.do")
 public class CheckboardDelSev extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -35,6 +35,7 @@ public class CheckboardDelSev extends HttpServlet {
 			response.sendRedirect("/user/login.do");
 			return;
 		}
+		
 		int i_checkboard = Utils.parseStringToInt(request.getParameter("i_checkboard"), 0);
 		if (i_checkboard == 0) { // 문제 발생!!
 			return;
@@ -49,11 +50,11 @@ public class CheckboardDelSev extends HttpServlet {
 		try {
 			conn = ConnectionProvider.getConnection();
 			conn.setAutoCommit(false); // 트랜잭션을 시작
-			
-			CheckboardDAO.DeleteCheckboard(conn, param);
-			CheckboardGoalDAO.DeleteAllCheckboard_goal(conn, param);
-			CheckboardParticipantDAO.DeleteAllCheckboard_goal(conn, param);
+
+			CheckboardParticipantDAO.DeleteAllCheckboard_participants(conn, param);
 			CheckboardReportDAO.DeleteAllCheckboard_report(conn, param);
+			CheckboardGoalDAO.DeleteAllCheckboard_goal(conn, param);
+			CheckboardDAO.DeleteCheckboard(conn, param);
 
 			conn.commit();
 		} catch (SQLException e) {
