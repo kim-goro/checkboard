@@ -11,10 +11,10 @@
 	<u:isLogin>
 		<table border="1" >
 			<tr bgcolor="red">
-				<td><a href="#"> DASHBOARD </a></td>
+				<td><a href="/checkboard/list.do"> DASHBOARD </a></td>
 				<td><a href="#"> CALENDER </a></td>
 				<td><a href="#"> TEAM </a></td>
-				<td><a href="#"> LOGOUT </a></td>
+				<td><a href="#/user/logout.do"> LOGOUT </a></td>
 			</tr>
 		</table>
 	</u:isLogin>

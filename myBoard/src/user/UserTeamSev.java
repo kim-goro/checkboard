@@ -3,7 +3,6 @@ package user;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,32 +10,32 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import checkboard.db.CheckboardParticipantDAO;
-import checkboard.vo.CheckBoardParticipantsVO;
-import checkboard.vo.CheckboardVO;
-import common.Utils;
 import jdbc.JdbcUtil;
 import jdbc.connection.ConnectionProvider;
+import user.db.UserRelationshipDAO;
+import user.vo.UserRelationshipVO;
+import user.vo.UserVO;
 
-@WebServlet("/user/FriendList.do")
-public class FriendListSev extends HttpServlet {
+@WebServlet("/user/team.do")
+public class UserTeamSev extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int i_checkboard = Utils.parseStringToInt(request.getParameter("i_checkboard"), 0);
-		request.setAttribute("i_checkboard", i_checkboard);
-
-		CheckboardVO param = new CheckboardVO();
-		param.setI_checkboard(i_checkboard);
-
-		// DB로부터 리스트를 가져온다.
+		//로그인 체크
+		HttpSession hs = request.getSession();
+		UserVO authUser = (UserVO)hs.getAttribute("authUser");
+		if(authUser == null) {
+			response.sendRedirect("/user/login.do");
+			return;
+		}
+		
+		//DB로부터 리스트를 가져온다.
 		Connection conn = null;
 		try {
 			conn = ConnectionProvider.getConnection();
 			conn.setAutoCommit(false); // 트랜잭션을 시작
-			List<CheckBoardParticipantsVO> list = CheckboardParticipantDAO.getCheckboardList_participants(conn, param);
-			request.setAttribute("list", list);
+			request.setAttribute("friendList", UserRelationshipDAO.getFriendList(conn, authUser));
 			
 			conn.commit();
 		} catch (SQLException e) {
@@ -45,15 +44,14 @@ public class FriendListSev extends HttpServlet {
 		} finally {
 			JdbcUtil.close(conn);
 		}
-
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/user/addFriend.jsp");
+		
+		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/user/team.jsp");
 		rd.forward(request, response);
 	}
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		
 	}
 
 }

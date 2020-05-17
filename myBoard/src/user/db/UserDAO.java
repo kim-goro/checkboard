@@ -80,7 +80,6 @@ public class UserDAO {
 				vo.setUser_gender(rs.getString("user_gender"));
 				vo.setUser_hobby(rs.getString("user_hobby"));
 				vo.setUser_birth(rs.getString("user_birth"));
-				vo.setUser_birth(rs.getString("user_birth"));
 				list.add(vo);
 			}
 
@@ -97,6 +96,7 @@ public class UserDAO {
 
 	// 로그인 하기 doLogin()
 	// 로그아웃 하기 doLogout()
+	// 유저 검색하기 searchUser
 	// 유령회원 설정하기
 
 	// 로그인하기
@@ -139,6 +139,39 @@ public class UserDAO {
 	public static void doLogout(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		session.invalidate(); // 세션 종료
+	}
+	
+	//유저 검색하기
+	public static List<UserVO> searchUser(Connection conn, String name) {
+		List<UserVO> list = new ArrayList();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		String sql = " SELECT * FROM t_user " + "WHERE user_id = ? ";
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, '%'+name+'%');
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				UserVO vo = new UserVO();
+				vo.setI_user(rs.getInt("i_user"));
+				vo.setUser_id(rs.getString("user_id"));
+				vo.setUser_email(rs.getString("user_email"));
+				vo.setUser_gender(rs.getString("user_gender"));
+				vo.setUser_hobby(rs.getString("user_hobby"));
+				vo.setUser_birth(rs.getString("user_birth"));
+				list.add(vo);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtil.close(pstmt);
+			JdbcUtil.close(rs);
+		}
+		return list;
 	}
 
 }

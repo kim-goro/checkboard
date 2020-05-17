@@ -1,24 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>로그인</title>
-<link rel="stylesheet" type="text/css" href="/css/common.css" />
+<title>Insert title here</title>
 </head>
 <body>
 	<div class="flexContainer flexCenter" style="flex-direction: column;">
-		<form class="solidForm" action="/user/login.do" method="POST">
+		<form class="solidForm" action="/user/search.do" method="POST">
 			<div class="marBottom10">
 				<input type="text" name="user_id" placeholder="아이디" value="kim">
 			</div>
-			<div class="marBottom10">
-				<input type="password" name="user_password" placeholder="비밀번호" value="1234">
-			</div>
 			<div class="flexContainer flexCenter" style="height: 40px;">
-				<input type="submit" value="로그인"/> &nbsp; &nbsp; 
-				<a href="user/join.do">회원가입</a>
+				<input type="submit" value="검색하기"/> &nbsp; &nbsp; 
 			</div>
 		</form>
 		<div style="color: red;">${Msg}</div>
