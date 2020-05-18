@@ -36,10 +36,9 @@ public class UserAddFriendSev extends HttpServlet {
 			param.setI_userf(Integer.parseInt(user_id));
 			
 			Connection conn = null;
-			UserRelationshipDAO.InsertFriend(conn, param);
 			try {
 				conn = ConnectionProvider.getConnection();
-				UserRelationshipDAO.InsertFriend(conn, param)
+				UserRelationshipDAO.InsertFriend(conn, param);
 			} catch (SQLException e) {
 				throw new RuntimeException(e);
 			} finally {
@@ -49,4 +48,5 @@ public class UserAddFriendSev extends HttpServlet {
 
 		RequestDispatcher rd = request.getRequestDispatcher("/user/team.do");
 		rd.forward(request, response);
+	}
 }

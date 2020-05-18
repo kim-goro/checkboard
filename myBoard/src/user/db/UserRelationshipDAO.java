@@ -20,7 +20,7 @@ public class UserRelationshipDAO {
 	// 친구 삭제 DeleteFriend()
 	// 친구 조회하기 getFriendList()
 
-	// 체크보드 팀원 추가히기
+	// 친구 추가
 	public static int InsertFriend(Connection conn, UserRelationshipVO param)
 			throws SQLException {
 		int cmd = 0;
@@ -45,7 +45,7 @@ public class UserRelationshipDAO {
 		return cmd;
 	}
 
-	// 체크보드 팀원 조회하기
+	// 모든 친구 삭제하기
 	public static List<UserRelationshipVO> getFriendList(Connection conn,
 			UserVO param) {
 		List<UserRelationshipVO> list = new ArrayList();
@@ -75,7 +75,7 @@ public class UserRelationshipDAO {
 		return list;
 	}
 	
-	// 체크보드 팀원 삭제하기
+	// 친구 삭제
 		public static int DeleteAllFriend(Connection conn, UserRelationshipVO param) {
 			int count = 0;
 			PreparedStatement pstmt = null;
@@ -95,7 +95,7 @@ public class UserRelationshipDAO {
 			return count;
 		}
 
-	// 해당 체크보드 팀원 삭제하기
+	// 친구 조회하기
 	public static int DeleteFriend(Connection conn, UserRelationshipVO param) {
 		int count = 0;
 		PreparedStatement pstmt = null;

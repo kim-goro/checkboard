@@ -6,17 +6,31 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/css/top.css" />
 </head>
 <body>
-	<u:isLogin>
-		<table border="1" >
-			<tr bgcolor="red">
-				<td><a href="/checkboard/list.do"> DASHBOARD </a></td>
-				<td><a href="#"> CALENDER </a></td>
-				<td><a href="#"> TEAM </a></td>
-				<td><a href="#/user/logout.do"> LOGOUT </a></td>
-			</tr>
-		</table>
-	</u:isLogin>
+
+<u:isLogin>
+	<nav class="navbar navbar-default">
+	  <div class="container-fluid">
+	    <a class="navbar-brand" href="#">CheckBoard</a>
+	    <a class="navbar-brand" href="#"><span class="fa fa-filter" aria-hidden="true"></span></a>
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar-collapse-1" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	    </div>
+	  </div>
+	</nav>
+</u:isLogin>
+	
+
+
+	
 </body>
 </html>

@@ -5,41 +5,36 @@
 <head>
 <meta charset="UTF-8">
 <title>회원가입</title>
-<link rel="stylesheet" type="text/css" href="/css/common.css" />
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/css/join.css" />
 </head>
-<body>
-	<div class="flexContainer flexCenter">
-		<form class="solidForm" id="frm" action="/user/join.do" method="POST" onsubmit="return submitChk()">
-			<div class="marBottom10">
-				<input type="text" name="user_id" placeholder="*아이디" value="kim">
-			</div>
-			<div class="marBottom10">
-				<input type="password" name="user_password" placeholder="*비밀번호" value="1234">
-			</div>
-			<div class="marBottom10">
-				<input type="password" name="user_repassword" placeholder="*비밀번호확인" value="1234">
-			</div>
-			<div class="marBottom10">
-				<input type="text" name="user_email" placeholder="*이메일" value="email@naver.com">
-			</div>
-			<div class="marBottom10">
-				<label> 여성 <input type="radio" name="user_gender" value="F" checked> </label>
-				<label> 남성  <input type="radio" name="user_gender" value="M"> </label>
-			</div>
-			<div class="marBottom10">
-				<input type='checkbox' name=user_hobby value='exercise' /> 운동 
-				<input type='checkbox' name='user_hobby' value='study' /> 공부 
-				<input type='checkbox' name='user_hobby' value='reading' /> 독서
-			</div>
-			<div class="marBottom10">
-				<input type="date" name="user_birth" placeholder="생년월일" value="2019-09-22">
-			</div>
-			<div class="flexContainer flexCenter">
-				<input type="submit" value="회원가입">
-			</div>
-			<div id="msg"/>
-		</form>
-	</div>
+<body class="text-center">
+  <form class="form-signin" action="/user/login.do" autocomplete="off" method="POST">
+    <h1 class="h3 mb-3 font-weight-normal">Sign up</h1>
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input type="text" id="inputEmail" class="form-control" name="user_id" placeholder="아이디" required autofocus>
+    <br>
+    <label for="inputEmail" class="sr-only">Password</label>
+    <input type="password" id="inputEmail" class="form-control" name="user_password" placeholder="비밀번호" required>
+    <label for="inputPassword" class="sr-only">re_Password</label>
+    <input type="password" id="inputPassword" class="form-control" name="user_repassword" placeholder="비밀번호 확인" required>
+    
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input type="email" id="inputEmail" class="form-control" name="user_email" placeholder="이메일" required autofocus>
+     <div style="color: red;">${Msg}</div>
+    <div class="checkbox mb-3">
+      <label> <input type="radio" value="user_gender" value='F' checked> 여성 </label> &nbsp;&nbsp;&nbsp;
+      <label> <input type="radio" value="user_gender" value='M' checked> 남성 </label>
+    </div>
+    <div class="checkbox mb-3">
+      <label> <input type="checkbox" value="user_hobby" value='exercise'> 운동 </label> &nbsp;&nbsp;&nbsp;
+      <label> <input type="checkbox" value="user_hobby" value='study'> 공부 </label> &nbsp;&nbsp;&nbsp;
+      <label> <input type="checkbox" value="user_hobby" value='reading'> 독서 </label> &nbsp;&nbsp;&nbsp;
+      <label> <input type="checkbox" value="user_hobby" value='camping'> 캠핑 </label>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+  </form>
 
 	<script>
 		function submitChk() {
@@ -71,6 +66,7 @@
 				return true
 			}
 		}
+		
 	</script>
 </body>
 </html>
